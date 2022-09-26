@@ -76,17 +76,23 @@ const onDrag = (event, piece, currentIndexes) => {
 const onDrop = (event, dropIndexes) => {
   const piece = JSON.parse(event.dataTransfer.getData("piece"));
   const indexes = JSON.parse(event.dataTransfer.getData("indexes"));
+
   if (typeof piece !== "object") return;
+
   const canDrop = availableMoves.value.some(
     (move) => move.i === dropIndexes.i && move.j === dropIndexes.j
   );
+
   if (canDrop) {
     board.value[dropIndexes.i][dropIndexes.j] =
       board.value[indexes.i][indexes.j];
     board.value[indexes.i][indexes.j] = 0;
   } else {
     console.log(board.value[indexes.i][indexes.j]);
-    board.value[indexes.i][indexes.j].class = "invalid";
+    board.value[indexes.i][indexes.j] = {
+      ...board.value[indexes.i][indexes.j],
+      class: "invalid",
+    };
     setTimeout(() => (board.value[indexes.i][indexes.j].class = ""), 300);
   }
 
@@ -125,10 +131,7 @@ const isAvailableMove = (rowIndex, columnIndex) => {
 }
 
 .invalid {
-  /* Start the shake animation and make the animation last for 0.5 seconds */
   animation: shake 0.5s;
-
-  /* When the animation is finished, start again */
   animation-iteration-count: infinite;
 }
 
