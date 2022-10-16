@@ -1,7 +1,22 @@
 <template>
-  <img src="../../public/Pieces/black-bishop.png" />
+  <img :src="path" class="piece-icon" />
 </template>
 
-<script></script>
+<script setup>
+import { ref, computed, defineProps } from "vue";
 
-<style></style>
+const props = defineProps({
+  team: String,
+  alias: String,
+});
+
+const path = computed(() => {
+  return `Pieces/${props.team.toLowerCase()}-${props.alias}.png`;
+});
+</script>
+
+<style>
+.piece-icon {
+  margin: auto;
+}
+</style>

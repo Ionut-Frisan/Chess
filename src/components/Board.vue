@@ -9,21 +9,17 @@
         @dragenter.prevent
         @dragover.prevent
       >
-        <span
+        <piece
           v-if="typeof tile === 'object'"
+          :alias="tile.alias"
+          :team="tile.team"
           :draggable="typeof board[rIndex][tIndex] === 'object'"
+          :class="[tile?.class, 'piece']"
           style="background-color: transparent"
           @dragstart="onDrag($event, tile, { i: rIndex, j: tIndex })"
           @dragenter.prevent
           @dragover.prevent
-        >
-          <font-awesome-icon
-            :icon="tile.icon"
-            :style="tile.style"
-            :class="[tile?.class, 'piece']"
-            fill="none"
-          />
-        </span>
+        ></piece>
         <span
           :class="{ 'available-move': isAvailableMove(rIndex, tIndex) }"
         ></span>
@@ -33,6 +29,8 @@
 </template>
 
 <script setup>
+import Piece from "./Piece.vue";
+
 import { ref, computed } from "vue";
 import { defaultBoard } from "../utils/constants";
 import { getAvailableMoves } from "../utils/utils";
