@@ -5,6 +5,7 @@ export const getAvailableMoves = (piece, indexes, board) => {
     bishop: getBishopMoves,
     queen: getQueenMoves,
     king: getKingMoves,
+    knight: getKnightMoves,
   };
   return moveMapping[piece.alias](piece, indexes, board) || [];
 };
@@ -210,4 +211,34 @@ const getKingMoves = (piece, indexes, board) => {
   return movesArr.concat(
     getRookMoves(piece, indexes, board, maxI, minI, maxJ, minJ)
   );
+};
+
+const getKnightMoves = (piece, indexes, board) => {
+  let movesArr = [];
+
+  const checkMove = (piece, indexes, board, i, j) => {
+    if (!(i >= 0 && i <= 7 && j >= 0 && j <= 7)) return;
+    if (typeof board[i][j] === "object") {
+      if (board[i][j].team !== piece.team) {
+        movesArr.push({ i, j });
+      }
+    } else {
+      movesArr.push({ i, j });
+    }
+  };
+
+  const allPossibleMoves = [
+    { i: indexes.i + 2, j: indexes.j + 1 },
+    { i: indexes.i + 2, j: indexes.j - 1 },
+    { i: indexes.i - 2, j: indexes.j + 1 },
+    { i: indexes.i - 2, j: indexes.j - 1 },
+    { i: indexes.i - 1, j: indexes.j + 2 },
+    { i: indexes.i + 1, j: indexes.j + 2 },
+    { i: indexes.i - 1, j: indexes.j - 2 },
+    { i: indexes.i + 1, j: indexes.j - 2 },
+  ];
+  for (const { i, j } of allPossibleMoves) {
+    checkMove(piece, indexes, board, i, j);
+  }
+  return movesArr;
 };

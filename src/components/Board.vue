@@ -36,6 +36,7 @@
 import { ref, computed } from "vue";
 import { defaultBoard } from "../utils/constants";
 import { getAvailableMoves } from "../utils/utils";
+import { useSoundManager } from "../composables/soundManager";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faChessBishop,
@@ -54,6 +55,8 @@ library.add(
   faChessRook,
   faChessQueen
 );
+
+const { playSound } = useSoundManager();
 
 defaultBoard.forEach((row, rIndex) =>
   row.forEach((tile, tIndex) => {
@@ -87,8 +90,9 @@ const onDrop = (event, dropIndexes) => {
     board.value[dropIndexes.i][dropIndexes.j] =
       board.value[indexes.i][indexes.j];
     board.value[indexes.i][indexes.j] = 0;
+    playSound("move");
   } else {
-    console.log(board.value[indexes.i][indexes.j]);
+    playSound("notAllowed");
     board.value[indexes.i][indexes.j] = {
       ...board.value[indexes.i][indexes.j],
       class: "invalid",
@@ -106,106 +110,4 @@ const isAvailableMove = (rowIndex, columnIndex) => {
 };
 </script>
 
-<style lang="scss">
-.board {
-  display: grid;
-  grid-template-rows: repeat(8, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-}
-
-.piece {
-  height: 90%;
-}
-
-.tile {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  position: relative;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-}
-
-.invalid {
-  animation: shake 0.5s;
-  animation-iteration-count: infinite;
-}
-
-.available-move {
-  background-color: rgba(255, 136, 0, 0.5);
-  width: 50%;
-  height: 50%;
-  display: block;
-  border-radius: 50%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 25%;
-}
-
-.row:nth-child(odd) {
-  .tile {
-    aspect-ratio: 1;
-    width: 100%;
-  }
-  .tile:nth-child(even) {
-    background-color: #009970;
-  }
-  .tile:nth-child(odd) {
-    background-color: #d9dedd;
-  }
-}
-
-.row:nth-child(even) {
-  .tile {
-    aspect-ratio: 1;
-    width: 100%;
-  }
-  .tile:nth-child(odd) {
-    background-color: #009970;
-  }
-  .tile:nth-child(even) {
-    background-color: #d9dedd;
-  }
-}
-
-@keyframes shake {
-  0% {
-    transform: translate(1px, 1px) rotate(0deg);
-  }
-  10% {
-    transform: translate(-1px, -2px) rotate(-2deg);
-  }
-  20% {
-    transform: translate(-3px, 0px) rotate(2deg);
-  }
-  30% {
-    transform: translate(3px, 2px) rotate(0deg);
-  }
-  40% {
-    transform: translate(1px, -1px) rotate(2deg);
-  }
-  50% {
-    transform: translate(-1px, 2px) rotate(-2deg);
-  }
-  60% {
-    transform: translate(-3px, 1px) rotate(0deg);
-  }
-  70% {
-    transform: translate(3px, 1px) rotate(-2deg);
-  }
-  80% {
-    transform: translate(-1px, -1px) rotate(2deg);
-  }
-  90% {
-    transform: translate(1px, 2px) rotate(0deg);
-  }
-  100% {
-    transform: translate(1px, -2px) rotate(-2deg);
-  }
-}
-</style>
+<style lang="scss"></style>
