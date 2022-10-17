@@ -1,4 +1,7 @@
 <template>
+  <button @click="isGamePlaying = !isGamePlaying" style="font-size: 50px">
+    Toggle game state
+  </button>
   <div :class="['board', { 'board-disabled': !isGamePlaying }]">
     <div class="row" v-for="(row, rIndex) in board" :key="'row-' + rIndex">
       <span
@@ -36,87 +39,20 @@
 import Piece from "./Piece.vue";
 
 import { ref, computed } from "vue";
-import { defaultBoard } from "../utils/constants";
-import { getAvailableMoves } from "../utils/utils";
-import { useSoundManager } from "../composables/soundManager";
-import { useGameManager } from "../composables/gameManager";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import {
-  faChessBishop,
-  faChessKing,
-  faChessKnight,
-  faChessPawn,
-  faChessQueen,
-  faChessRook,
-} from "@fortawesome/free-solid-svg-icons";
+import { storeToRefs } from "pinia";
+import { useMainStore } from "../store/main";
 
-library.add(
-  faChessBishop,
-  faChessKing,
-  faChessKnight,
-  faChessPawn,
-  faChessRook,
-  faChessQueen
-);
+const store = useMainStore();
 
-const { playSound } = useSoundManager();
-const { changeTurn, isGamePlaying, turn } = useGameManager();
-
-defaultBoard.forEach((row, rIndex) =>
-  row.forEach((tile, tIndex) => {
-    if (typeof tile === "object") tile.key = rIndex + "-" + tIndex;
-  })
-);
-
-const board = ref(defaultBoard);
-const availableMoves = ref([]);
+const { isGamePlaying, turn, board, availableMoves } = storeToRefs(store);
+const { dropPiece, dragPiece } = store;
 
 const onDrag = (event, piece, currentIndexes) => {
-  if (!isGamePlaying.value || turn.value !== piece.team) return;
-  event.dataTransfer.dropEffect = "move";
-  event.dataTransfer.effectAllowed = "move";
-  event.dataTransfer.setData("piece", JSON.stringify(piece));
-  event.dataTransfer.setData("indexes", JSON.stringify(currentIndexes));
-  availableMoves.value = getAvailableMoves(piece, currentIndexes, board.value);
+  dragPiece(event, piece, currentIndexes);
 };
 
 const onDrop = (event, dropIndexes) => {
-  const piece = JSON.parse(event.dataTransfer.getData("piece"));
-  const indexes = JSON.parse(event.dataTransfer.getData("indexes"));
-
-  // return if game has not started or is not team's turn
-  if (!isGamePlaying.value || turn.value !== piece.team) return;
-
-  if (typeof piece !== "object") return;
-
-  const canDrop = availableMoves.value.some(
-    (move) => move.i === dropIndexes.i && move.j === dropIndexes.j
-  );
-
-  if (canDrop) {
-    const prevBoard = board.value;
-    let newBoard = board.value;
-    newBoard[dropIndexes.i][dropIndexes.j] = newBoard[indexes.i][indexes.j];
-    newBoard[indexes.i][indexes.j] = 0;
-
-    changeTurn({
-      pieceMoved: piece,
-      prevBoard,
-      board: newBoard,
-    });
-
-    playSound("move");
-    board.value = newBoard;
-  } else {
-    playSound("notAllowed");
-    board.value[indexes.i][indexes.j] = {
-      ...board.value[indexes.i][indexes.j],
-      class: "invalid",
-    };
-    setTimeout(() => (board.value[indexes.i][indexes.j].class = ""), 300);
-  }
-
-  availableMoves.value = [];
+  dropPiece(event, dropIndexes);
 };
 
 const isAvailableMove = (rowIndex, columnIndex) => {

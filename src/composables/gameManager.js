@@ -18,5 +18,5 @@ export const useGameManager = () => {
   const startGame = () => {
     isGamePlaying.value = true;
   };
-  return { changeTurn, isGamePlaying, history, turn };
+  return { changeTurn, isGamePlaying, history, turn, startGame };
 };
