@@ -32,20 +32,30 @@
         ></span>
       </span>
     </div>
+    <ImageSelector
+      v-if="pawnReplacement.possible"
+      team="white"
+      v-model="pawnReplacer"
+    >
+    </ImageSelector>
   </div>
 </template>
 
 <script setup>
 import Piece from "./Piece.vue";
+import ImageSelector from "./ImageSelector.vue";
 
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useMainStore } from "../store/main";
 
+const pawnReplacer = ref("");
+
 const store = useMainStore();
 
-const { isGamePlaying, turn, board, availableMoves } = storeToRefs(store);
-const { dropPiece, dragPiece } = store;
+const { isGamePlaying, turn, board, availableMoves, pawnReplacement } =
+  storeToRefs(store);
+const { dropPiece, dragPiece, replacePawn } = store;
 
 const onDrag = (event, piece, currentIndexes) => {
   dragPiece(event, piece, currentIndexes);
@@ -60,6 +70,10 @@ const isAvailableMove = (rowIndex, columnIndex) => {
     (move) => move.i === rowIndex && move.j === columnIndex
   );
 };
+
+watch(pawnReplacer, (val, oldVal) => {
+  replacePawn(val);
+});
 </script>
 
 <style lang="scss"></style>

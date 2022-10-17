@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { defaultBoard } from "../utils/constants";
 import { useSoundManager } from "../composables/soundManager";
-import { getAvailableMoves } from "../utils/utils";
+import { getAvailableMoves, checkPawnReplace } from "../utils/utils";
 
 const { playSound } = useSoundManager();
 
@@ -21,6 +21,10 @@ export const useMainStore = defineStore("main", {
     removedPieces: [],
     board: defaultBoard,
     availableMoves: [],
+    pawnReplacement: {
+      possible: false,
+      indexes: { i: null, j: null },
+    },
   }),
   actions: {
     changeTurn(data) {
@@ -66,6 +70,21 @@ export const useMainStore = defineStore("main", {
         playSound("move");
 
         this.board = newBoard;
+        const canPawnBeReplaced = checkPawnReplace(
+          piece,
+          this.board,
+          dropIndexes
+        );
+        if (canPawnBeReplaced) {
+          this.isGamePlaying = false;
+          this.pawnReplacement = {
+            possible: true,
+            indexes: {
+              i: dropIndexes.i,
+              j: dropIndexes.j,
+            },
+          };
+        }
       } else {
         playSound("notAllowed");
         this.board[indexes.i][indexes.j] = {
@@ -88,6 +107,18 @@ export const useMainStore = defineStore("main", {
         currentIndexes,
         this.board
       );
+    },
+    replacePawn(newAlias) {
+      const { i, j } = this.pawnReplacement.indexes;
+      this.board[i][j] = { ...this.board[i][j], alias: newAlias };
+      this.pawnReplacement = {
+        possible: false,
+        indexes: {
+          i: null,
+          j: null,
+        },
+      };
+      this.isGamePlaying = true;
     },
   },
 });

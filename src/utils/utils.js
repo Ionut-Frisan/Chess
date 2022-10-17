@@ -242,3 +242,10 @@ const getKnightMoves = (piece, indexes, board) => {
   }
   return movesArr;
 };
+
+export const checkPawnReplace = (piece, board, indexes) => {
+  if (piece.alias !== "pawn") return false;
+  if (piece.team === "white" && indexes.i === 7) return true;
+  if (piece.team === "black" && indexes.i === 0) return true;
+  return false;
+};

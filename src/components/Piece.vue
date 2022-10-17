@@ -18,5 +18,6 @@ const path = computed(() => {
 <style>
 .piece-icon {
   margin: auto;
+  max-width: 100%;
 }
 </style>

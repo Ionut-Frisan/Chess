@@ -1,9 +1,9 @@
 <template>
-  <board />
+  <game />
 </template>
 
 <script setup>
-import Board from "./components/Board.vue";
+import Game from "./components/Game.vue";
 import "./main.scss";
 </script>
 
