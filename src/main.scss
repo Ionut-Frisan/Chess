@@ -5,6 +5,12 @@
   grid-row-gap: 0px;
 }
 
+.board-disabled{
+  background-color: black;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .piece {
   height: 90%;
   max-height: 100%;

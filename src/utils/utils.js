@@ -195,8 +195,8 @@ const getQueenMoves = (piece, indexes, board) => {
 };
 
 const getKingMoves = (piece, indexes, board) => {
-  const minI = indexes.i <= 1 ? 1 : indexes.i - 1;
-  const minJ = indexes.j <= 1 ? 1 : indexes.j - 1;
+  const minI = indexes.i <= 1 ? 0 : indexes.i - 1;
+  const minJ = indexes.j <= 1 ? 0 : indexes.j - 1;
   const maxI = indexes.i == 7 ? 8 : indexes.i + 2;
   const maxJ = indexes.j == 7 ? 8 : indexes.j + 2;
   const movesArr = getBishopMoves(

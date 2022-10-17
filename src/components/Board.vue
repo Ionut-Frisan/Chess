@@ -1,5 +1,5 @@
 <template>
-  <div class="board">
+  <div :class="['board', { 'board-disabled': !isGamePlaying }]">
     <div class="row" v-for="(row, rIndex) in board" :key="'row-' + rIndex">
       <span
         class="tile"
@@ -13,7 +13,11 @@
           v-if="typeof tile === 'object'"
           :alias="tile.alias"
           :team="tile.team"
-          :draggable="typeof board[rIndex][tIndex] === 'object'"
+          :draggable="
+            typeof board[rIndex][tIndex] === 'object' &&
+            tile.team === turn &&
+            isGamePlaying
+          "
           :class="[tile?.class, 'piece']"
           style="background-color: transparent"
           @dragstart="onDrag($event, tile, { i: rIndex, j: tIndex })"
@@ -35,6 +39,7 @@ import { ref, computed } from "vue";
 import { defaultBoard } from "../utils/constants";
 import { getAvailableMoves } from "../utils/utils";
 import { useSoundManager } from "../composables/soundManager";
+import { useGameManager } from "../composables/gameManager";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faChessBishop,
@@ -55,6 +60,7 @@ library.add(
 );
 
 const { playSound } = useSoundManager();
+const { changeTurn, isGamePlaying, turn } = useGameManager();
 
 defaultBoard.forEach((row, rIndex) =>
   row.forEach((tile, tIndex) => {
@@ -66,7 +72,7 @@ const board = ref(defaultBoard);
 const availableMoves = ref([]);
 
 const onDrag = (event, piece, currentIndexes) => {
-  // calculatePossibleMoves(piece);
+  if (!isGamePlaying.value || turn.value !== piece.team) return;
   event.dataTransfer.dropEffect = "move";
   event.dataTransfer.effectAllowed = "move";
   event.dataTransfer.setData("piece", JSON.stringify(piece));
@@ -78,6 +84,9 @@ const onDrop = (event, dropIndexes) => {
   const piece = JSON.parse(event.dataTransfer.getData("piece"));
   const indexes = JSON.parse(event.dataTransfer.getData("indexes"));
 
+  // return if game has not started or is not team's turn
+  if (!isGamePlaying.value || turn.value !== piece.team) return;
+
   if (typeof piece !== "object") return;
 
   const canDrop = availableMoves.value.some(
@@ -85,10 +94,19 @@ const onDrop = (event, dropIndexes) => {
   );
 
   if (canDrop) {
-    board.value[dropIndexes.i][dropIndexes.j] =
-      board.value[indexes.i][indexes.j];
-    board.value[indexes.i][indexes.j] = 0;
+    const prevBoard = board.value;
+    let newBoard = board.value;
+    newBoard[dropIndexes.i][dropIndexes.j] = newBoard[indexes.i][indexes.j];
+    newBoard[indexes.i][indexes.j] = 0;
+
+    changeTurn({
+      pieceMoved: piece,
+      prevBoard,
+      board: newBoard,
+    });
+
     playSound("move");
+    board.value = newBoard;
   } else {
     playSound("notAllowed");
     board.value[indexes.i][indexes.j] = {
