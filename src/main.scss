@@ -1,9 +1,25 @@
+html {
+  background-color: #292929;
+}
+
+.game-content{
+  display: flex;
+  flex-direction: column;
+  row-gap: 1em;
+  max-width: 60%;
+  max-height: 90%;
+  margin: auto;
+  align-content: center;
+  align-items: center;
+}
+
 .board {
   display: grid;
   grid-template-rows: repeat(8, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  position: relative;
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+  //position: relative;
+  max-width: 70%;
 }
 
 .board-disabled{
@@ -113,15 +129,29 @@
   }
 }
 
-// .game-content{
-//   display: flex;
-// }
-
 .removed-pieces{
-  height: 5em;
+  height: 4em;
   display: grid;
   grid-template-columns: repeat(16, calc(100%/16));
+  overflow: hidden;
+  width: 100%;
   // display: flex;
   // flex-direction: column;
   // justify-items: start;
+
+  & > .removed-piece {
+    height: 100%;
+    margin: auto;
+
+    & image {
+      object-fit: cover;
+      width: 100%;
+      height: auto;
+      overflow: hidden;
+    }
+  }
+}
+
+.removed-pieces > img {
+  max-height: 100%;
 }

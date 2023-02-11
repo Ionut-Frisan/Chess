@@ -1,7 +1,11 @@
 import { defineStore } from "pinia";
 import { defaultBoard } from "../utils/constants";
 import { useSoundManager } from "../composables/soundManager";
-import { getAvailableMoves, checkPawnReplace } from "../utils/utils";
+import {
+  getAvailableMoves,
+  checkPawnReplace,
+  isCheckMate,
+} from "../utils/utils";
 
 const { playSound } = useSoundManager();
 
@@ -13,7 +17,7 @@ defaultBoard.forEach((row, rIndex) =>
 
 export const useMainStore = defineStore("main", {
   state: () => ({
-    isGamePlaying: false,
+    isGamePlaying: true,
     turn: "white",
     teams: ["white", "black"],
     historyIndex: 0,
@@ -25,6 +29,7 @@ export const useMainStore = defineStore("main", {
       possible: false,
       indexes: { i: null, j: null },
     },
+    winner: "",
   }),
   actions: {
     changeTurn(data) {
@@ -85,6 +90,8 @@ export const useMainStore = defineStore("main", {
             },
           };
         }
+        const team = this.turn === "white" ? "black" : "white";
+        isCheckMate(this.board, team, this.turn);
       } else {
         playSound("notAllowed");
         this.board[indexes.i][indexes.j] = {

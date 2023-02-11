@@ -249,3 +249,60 @@ export const checkPawnReplace = (piece, board, indexes) => {
   if (piece.team === "black" && indexes.i === 0) return true;
   return false;
 };
+
+const getComputedPieces = (board, team = "") => {
+  let pieces = [];
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      if (
+        typeof board[i][j] === "object" &&
+        (board[i][j].team === team || team === "")
+      ) {
+        pieces.push({
+          ...board[i][j],
+          indexes: { i, j },
+        });
+      }
+    }
+  }
+  return pieces;
+};
+
+const getKing = (board, team = "white") => {
+  return getComputedPieces(board, team).filter(
+    (piece) => piece.team === team && piece.alias === "king"
+  )[0];
+};
+
+const getAllTeamMoves = (board, pieces) => {
+  let moves = [];
+  for (const piece of pieces) {
+    moves.push(...getAvailableMoves(piece, piece.indexes, board));
+  }
+  return moves;
+};
+
+// TODO: also check if kings team cannot block checkmate
+// TODO: also check future moves? board can be updated with kings move as the future
+export const isCheckMate = (board, team = "white", otherTeam) => {
+  const pieces = getComputedPieces(board, team);
+  const king = getKing(board, otherTeam);
+  let kingMoves = getKingMoves(king, king.indexes, board);
+  kingMoves.push(king.indexes);
+  // console.log(team, board.length, pieces.length);
+  // console.log(getAllTeamMoves(board, pieces));
+  const moves = getAllTeamMoves(board, pieces, kingMoves);
+  let canKingMove = false;
+  for (const kingMove of kingMoves) {
+    if (
+      moves.some((move) => !(move.i === kingMove.i && move.j === kingMove.j))
+    ) {
+      canKingMove = true;
+    }
+  }
+  console.log(canKingMove);
+  console.log(`team: ${team}, otherTeam: ${otherTeam}`);
+  console.log("kingMoves: ", kingMoves);
+  console.log("moves: ", moves);
+  console.log("**************");
+};

@@ -1,7 +1,7 @@
 <template>
-  <button @click="isGamePlaying = !isGamePlaying" style="font-size: 50px">
+  <!-- <button @click="isGamePlaying = !isGamePlaying" style="font-size: 50px">
     Toggle game state
-  </button>
+  </button> -->
   <div :class="['board', { 'board-disabled': !isGamePlaying }]">
     <div class="row" v-for="(row, rIndex) in board" :key="'row-' + rIndex">
       <span
@@ -34,7 +34,7 @@
     </div>
     <ImageSelector
       v-if="pawnReplacement.possible"
-      team="white"
+      :team="teamReplace"
       v-model="pawnReplacer"
     >
     </ImageSelector>
@@ -73,6 +73,13 @@ const isAvailableMove = (rowIndex, columnIndex) => {
 
 watch(pawnReplacer, (val, oldVal) => {
   replacePawn(val);
+});
+
+const teamReplace = computed(() => {
+  const { i, j } = pawnReplacement.value.indexes;
+  if (!pawnReplacement.value.possible || i === null || i === null)
+    return "white";
+  return board.value[i][j].team || "white";
 });
 </script>
 
