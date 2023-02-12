@@ -11,7 +11,7 @@ const props = defineProps({
 });
 
 const path = computed(() => {
-  return `Pieces/${props.team.toLowerCase()}-${props.alias}.png`;
+  return `Pieces/${props.team.toLowerCase()}-${props.alias}-1.png`;
 });
 </script>
 

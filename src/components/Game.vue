@@ -20,11 +20,13 @@
         ></piece>
       </div>
     </div>
+    <game-menu/>
   </div>
 </template>
 <script setup>
 import Board from "./Board.vue";
 import Piece from "./Piece.vue";
+import GameMenu from "./GameMenu.vue";
 import {storeToRefs} from "pinia";
 import {computed} from "vue";
 import {useMainStore} from "../store/main";

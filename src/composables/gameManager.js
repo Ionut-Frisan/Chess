@@ -1,4 +1,4 @@
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 export const useGameManager = () => {
   const turn = ref("white");
@@ -6,6 +6,7 @@ export const useGameManager = () => {
   const history = ref([]);
   let historyIndex = 0;
   const isGamePlaying = ref(false);
+  const gameState = ref('notStarted');
 
   const changeTurn = (data) => {
     if (!isGamePlaying) return;
@@ -17,6 +18,12 @@ export const useGameManager = () => {
 
   const startGame = () => {
     isGamePlaying.value = true;
+    gameState.value = 'playing'
   };
+
+  const pauseGame = () => {
+    isGamePlaying.value = false;
+    gameState.value = 'paused';
+  }
   return { changeTurn, isGamePlaying, history, turn, startGame };
 };

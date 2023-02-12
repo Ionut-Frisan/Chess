@@ -2,9 +2,12 @@ import { ref, onMounted } from "vue";
 
 export const useSoundManager = () => {
   const enabled = ref(true);
+  const volume = ref(1);
 
   onMounted(() => {
+    // TODO: logic for volume
     const soundEnabled = JSON.parse(localStorage.getItem("soundEnabled"));
+    const volumeValue = JSON.parse(localStorage.getItem("soundEnabled"));
     if (!(soundEnabled === undefined || soundEnabled === null)) {
       enabled.value = soundEnabled;
     } else {
@@ -15,6 +18,14 @@ export const useSoundManager = () => {
   const toggleSound = () => {
     enabled.value = !enabled.value;
     localStorage.setItem("soundEnabled", JSON.stringify(enabled.value));
+  };
+
+  const setVolume = (value) => {
+    if(!value) {
+      enabled.value = false;
+      localStorage.setItem("soundEnabled", JSON.stringify(enabled.value));
+      localStorage.setItem("volume", JSON.stringify(enabled.value));
+    }
   };
 
   const playSound = (type) => {
@@ -29,5 +40,5 @@ export const useSoundManager = () => {
       audio.play();
     } else console.log("sound is disabled");
   };
-  return { playSound };
+  return { playSound, toggleSound, setVolume };
 };
