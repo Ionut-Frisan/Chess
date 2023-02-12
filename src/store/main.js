@@ -7,7 +7,8 @@ import {
   isCheckMate,
 } from "../utils/utils";
 
-const { playSound } = useSoundManager();
+const soundManager = useSoundManager();
+// const { playSound } = soundManager;
 
 defaultBoard.forEach((row, rIndex) =>
   row.forEach((tile, tIndex) => {
@@ -17,7 +18,8 @@ defaultBoard.forEach((row, rIndex) =>
 
 export const useMainStore = defineStore("main", {
   state: () => ({
-    isGamePlaying: true,
+    isGamePlaying: false,
+    gameState: 'notStarted',
     turn: "white",
     teams: ["white", "black"],
     historyIndex: 0,
@@ -40,7 +42,12 @@ export const useMainStore = defineStore("main", {
       this.historyIndex = this.history.length - 1;
     },
     startGame() {
+      this.isGamePlaying = true;
+      this.gameState = 'playing';
+    },
+    pauseGame() {
       this.isGamePlaying = false;
+      this.gameState = 'paused';
     },
     removePiece({ i, j }, board) {
       if (typeof board[i][j] === "object") {
@@ -72,7 +79,7 @@ export const useMainStore = defineStore("main", {
         newBoard[dropIndexes.i][dropIndexes.j] = newBoard[indexes.i][indexes.j];
         newBoard[indexes.i][indexes.j] = 0;
 
-        playSound("move");
+        soundManager.playSound("move");
 
         this.board = newBoard;
         const canPawnBeReplaced = checkPawnReplace(
@@ -93,7 +100,7 @@ export const useMainStore = defineStore("main", {
         const team = this.turn === "white" ? "black" : "white";
         isCheckMate(this.board, team, this.turn);
       } else {
-        playSound("notAllowed");
+        soundManager.playSound("notAllowed");
         this.board[indexes.i][indexes.j] = {
           ...this.board[indexes.i][indexes.j],
           class: "invalid",

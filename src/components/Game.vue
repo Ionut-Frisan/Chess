@@ -3,9 +3,8 @@
     <div class="game-content">
       <!-- TODO: needs better styling -->
       <div class="removed-pieces">
-        <div class="removed-piece">
+        <div class="removed-piece" v-for="piece in removedWhite">
           <piece
-              v-for="piece in removedWhite"
               :alias="piece.alias"
               :team="piece.team"
           ></piece>
@@ -13,11 +12,12 @@
       </div>
       <board></board>
       <div class="removed-pieces">
-        <piece
-            v-for="piece in removedBlack"
-            :alias="piece.alias"
-            :team="piece.team"
-        ></piece>
+        <div class="removed-piece" v-for="piece in removedBlack">
+          <piece
+              :alias="piece.alias"
+              :team="piece.team"
+          ></piece>
+        </div>
       </div>
     </div>
     <game-menu/>

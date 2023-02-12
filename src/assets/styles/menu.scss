@@ -1,9 +1,80 @@
-.game-menu{
+.game-menu {
   width: 100vw;
   height: 100vh;
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   display: block;
-  opacity: 0.8;
+  opacity: 1;
+  background-color: #292929;
+  transition: all 0.2s linear;
+
+  .game-menu-content {
+    width: fit-content;
+    margin: auto;
+    position: relative;
+    height: 5em;
+    top: calc(50% - 2.5em);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 1em;
+    color: #fff;
+
+    .volume {
+      display: flex;
+      flex-direction: row;
+      width: 3em;
+      align-items: center;
+      height: 100%;
+      column-gap: 0.2em;
+      font-size: 2rem;
+      cursor: pointer;
+
+      & svg {
+        width: 1em;
+      }
+    }
+
+    .button {
+      padding: 0.5em;
+      border-radius: 1em;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .play-button {
+      display: flex;
+      column-gap: 0.5em;
+      align-items: center;
+      border: 2px solid #009970;
+      box-shadow: 0 0 2px #009970;
+      animation: pulse 2s infinite linear;
+    }
+  }
+
+  &.minimized {
+    top: 2em;
+    right: 1em;
+    left: calc(100% - 11em);
+    width: 10em;
+    height: 5em;
+
+    .game-menu-content {
+      column-gap: 0.5em;
+      .play-button {
+        padding: 0;
+        border: unset;
+        box-shadow: unset;
+        animation: unset;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  50% {
+    box-shadow: 0 0 15px #009970;
+  }
 }
