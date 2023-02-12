@@ -28,7 +28,7 @@ const emits = defineEmits(["update:modelValue"]);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   position: absolute;
-  z-index: 999;
+  z-index: 9;
   height: 20%;
   width: 50%;
   right: 25%;

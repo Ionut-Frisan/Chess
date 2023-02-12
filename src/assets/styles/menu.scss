@@ -9,6 +9,7 @@
   opacity: 1;
   background-color: #292929;
   transition: all 0.2s linear;
+  z-index: 10;
 
   .game-menu-content {
     width: fit-content;

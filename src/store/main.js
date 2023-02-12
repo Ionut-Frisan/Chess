@@ -88,7 +88,7 @@ export const useMainStore = defineStore("main", {
           dropIndexes
         );
         if (canPawnBeReplaced) {
-          this.isGamePlaying = false;
+          // this.isGamePlaying = false;
           this.pawnReplacement = {
             possible: true,
             indexes: {
@@ -132,7 +132,7 @@ export const useMainStore = defineStore("main", {
           j: null,
         },
       };
-      this.isGamePlaying = true;
+      // this.isGamePlaying = true;
     },
   },
 });

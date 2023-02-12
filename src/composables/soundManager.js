@@ -3,7 +3,6 @@ import { ref, onMounted, watch } from "vue";
 export const useSoundManager = () => {
   const enabled = ref(true);
   const volume = ref(1);
-  // TODO: check why is this not working
 
   onMounted(() => {
     const soundEnabled = JSON.parse(localStorage.getItem("soundEnabled"));
@@ -50,10 +49,15 @@ export const useSoundManager = () => {
       move: "piece-move.mp3",
     };
 
-    if (enabled.value) {
-      console.log(enabled.value, volume.value);
+    const enabledLH = JSON.parse(localStorage.getItem('soundEnabled'));
+    const volumeLH = JSON.parse(localStorage.getItem('volume'));
+
+    const enabledComputed = typeof enabledLH === 'boolean' ? enabledLH : true;
+    const volumeComputed = typeof volumeLH === 'number' ? volumeLH : true;
+
+    if (enabledComputed) {
       let audio = new Audio("Sounds/" + sounds[type]);
-      audio.volume = volume.value / 2;
+      audio.volume = volumeComputed / 2;
       audio.play();
     } else console.log("sound is disabled");
   };
