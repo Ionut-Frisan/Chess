@@ -3,7 +3,7 @@
     <div class="game-content">
       <!-- TODO: needs better styling -->
       <div class="removed-pieces">
-        <div class="removed-piece" v-for="piece in removedWhite">
+        <div class="removed-piece" v-for="piece in removedBlack">
           <piece
               :alias="piece.alias"
               :team="piece.team"
@@ -12,7 +12,7 @@
       </div>
       <board></board>
       <div class="removed-pieces">
-        <div class="removed-piece" v-for="piece in removedBlack">
+        <div class="removed-piece" v-for="piece in removedWhite">
           <piece
               :alias="piece.alias"
               :team="piece.team"

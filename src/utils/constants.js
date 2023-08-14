@@ -45,7 +45,7 @@ export const rookW = {
 };
 
 export const queenW = {
-  points: 5,
+  points: 9,
   alias: "queen",
   icon: "fa fa-chess-queen",
   ...whiteTeamConstants,
@@ -87,7 +87,7 @@ export const rookB = {
 };
 
 export const queenB = {
-  points: 5,
+  points: 9,
   alias: "queen",
   icon: "fa fa-chess-queen",
   ...blackTeamConstatns,

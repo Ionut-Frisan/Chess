@@ -1,6 +1,14 @@
-html {
+body {
   background-color: #292929;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+.content{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
 }
 
 .game-content{
@@ -8,10 +16,11 @@ html {
   flex-direction: column;
   row-gap: 1em;
   max-width: 60%;
-  max-height: 90%;
+  height: 100vh;
   margin: auto;
   align-content: center;
   align-items: center;
+  justify-content: space-between;
 }
 
 .board {
@@ -20,7 +29,9 @@ html {
   grid-column-gap: 0;
   grid-row-gap: 0;
   //position: relative;
-  max-width: 70%;
+  max-width: 40vw;
+  border-radius: 0.2rem;
+  overflow: hidden;
 }
 
 .board-disabled{
@@ -141,18 +152,50 @@ html {
   // justify-items: start;
 
   & > .removed-piece {
-    height: 100%;
+    height: fit-content;
     margin: auto;
 
     & image {
       object-fit: cover;
       width: 100%;
-      height: auto;
+      margin: auto 0;
       overflow: hidden;
     }
   }
 }
 
-.removed-pieces > img {
+.removed-pieces img {
   max-height: 100%;
+}
+
+.no-animations * {
+  transition: unset !important;
+}
+@media only screen and (max-width: 1200px) {
+  html{
+    font-size: 14px;
+  }
+
+  .game-content{
+    height: 80vh;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  html{
+    font-size: 12px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  html{
+    font-size: 10px;
+  }
+}
+
+
+@media only screen and (max-width: 600px) {
+  html{
+    font-size: 8px;
+  }
 }

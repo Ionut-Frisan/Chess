@@ -1,7 +1,4 @@
 <template>
-  <!-- <button @click="isGamePlaying = !isGamePlaying" style="font-size: 50px">
-    Toggle game state
-  </button> -->
   <div :class="['board', { 'board-disabled': boardDisabled }]">
     <div class="row" v-for="(row, rIndex) in board" :key="'row-' + rIndex">
       <span
